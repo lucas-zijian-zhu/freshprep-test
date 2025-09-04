@@ -1,47 +1,32 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import {
-  ActivityIndicator,
-  FlatList,
-  RefreshControl,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View
+    FlatList,
+    RefreshControl,
+    StyleSheet,
+    TouchableOpacity,
+    View
 } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { useIsFavorite, useToggleFavorite } from '@/hooks/useFavorites';
-import { useRepositories } from '@/hooks/useRepositories';
+import { useFavoriteRepositories, useToggleFavorite } from '@/hooks/useFavorites';
 import { GitHubRepository } from '@/types';
 
-export default function HomeScreen() {
+export default function FavoritesScreen() {
   const colorScheme = useColorScheme();
-  const [searchQuery, setSearchQuery] = useState('react');
-  const [sortBy, setSortBy] = useState<'stars' | 'forks' | 'updated'>('stars');
-
   const {
-    data,
+    data: favoriteRepositories = [],
     isLoading,
     isError,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
     refetch,
     isRefetching,
-  } = useRepositories({
-    query: searchQuery,
-    per_page: 20,
-    sort: sortBy,
-    order: 'desc',
-  });
+  } = useFavoriteRepositories();
 
-  const repositories = data?.pages.flatMap(page => page.items) || [];
+  const toggleFavorite = useToggleFavorite();
 
   const handleRepositoryPress = useCallback((repository: GitHubRepository) => {
     router.push({
@@ -50,37 +35,46 @@ export default function HomeScreen() {
     });
   }, []);
 
-  const handleLoadMore = useCallback(() => {
-    if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  const handleRemoveFavorite = useCallback((repositoryId: number) => {
+    toggleFavorite.mutate({
+      repositoryId,
+      isFavorite: true,
+    });
+  }, [toggleFavorite]);
 
   const renderRepository = useCallback(({ item }: { item: GitHubRepository }) => (
-    <RepositoryItem
+    <FavoriteRepositoryItem
       repository={item}
       onPress={handleRepositoryPress}
+      onRemove={handleRemoveFavorite}
       colorScheme={colorScheme as 'light' | 'dark' | null}
     />
-  ), [handleRepositoryPress, colorScheme]);
-
-  const renderFooter = useCallback(() => {
-    if (!isFetchingNextPage) return null;
-    return (
-      <View style={styles.footerLoader}>
-        <ActivityIndicator size="small" color={Colors[colorScheme ?? 'light'].tint} />
-      </View>
-    );
-  }, [isFetchingNextPage, colorScheme]);
+  ), [handleRepositoryPress, handleRemoveFavorite, colorScheme]);
 
   const renderEmpty = useCallback(() => {
     if (isLoading) return null;
     return (
       <ThemedView style={styles.emptyContainer}>
-        <ThemedText>No repositories found. Try a different search term.</ThemedText>
+        <Ionicons 
+          name="heart-outline" 
+          size={64} 
+          color={Colors[colorScheme ?? 'light'].tint} 
+        />
+        <ThemedText type="subtitle" style={styles.emptyTitle}>
+          No Favorites Yet
+        </ThemedText>
+        <ThemedText style={styles.emptyMessage}>
+          Start exploring repositories and tap the heart icon to add them to your favorites.
+        </ThemedText>
+        <TouchableOpacity
+          style={[styles.exploreButton, { backgroundColor: Colors[colorScheme ?? 'light'].tint }]}
+          onPress={() => router.push('/(tabs)/')}
+        >
+          <ThemedText style={styles.exploreButtonText}>Explore Repositories</ThemedText>
+        </TouchableOpacity>
       </ThemedView>
     );
-  }, [isLoading]);
+  }, [isLoading, colorScheme]);
 
   if (isError) {
     return (
@@ -88,7 +82,7 @@ export default function HomeScreen() {
         <Ionicons name="alert-circle" size={48} color={Colors[colorScheme ?? 'light'].tint} />
         <ThemedText type="subtitle" style={styles.errorTitle}>Something went wrong</ThemedText>
         <ThemedText style={styles.errorMessage}>
-          {error instanceof Error ? error.message : 'An unknown error occurred'}
+          Unable to load your favorites. Please try again.
         </ThemedText>
         <TouchableOpacity style={styles.retryButton} onPress={() => refetch()}>
           <ThemedText style={styles.retryButtonText}>Try Again</ThemedText>
@@ -100,60 +94,16 @@ export default function HomeScreen() {
   return (
     <ThemedView style={styles.container}>
       <ThemedView style={styles.header}>
-        <ThemedText type="title" style={styles.title}>GitHub Repositories</ThemedText>
-        
-        <View style={styles.searchContainer}>
-          <Ionicons 
-            name="search" 
-            size={20} 
-            color={Colors[colorScheme ?? 'light'].text} 
-            style={styles.searchIcon}
-          />
-          <TextInput
-            style={[styles.searchInput, { color: Colors[colorScheme ?? 'light'].text }]}
-            placeholder="Search repositories..."
-            placeholderTextColor={Colors[colorScheme ?? 'light'].text + '80'}
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            returnKeyType="search"
-            onSubmitEditing={() => refetch()}
-          />
-        </View>
-
-        <View style={styles.sortContainer}>
-          <ThemedText style={styles.sortLabel}>Sort by:</ThemedText>
-          <View style={styles.sortButtons}>
-            {(['stars', 'forks', 'updated'] as const).map((sort) => (
-              <TouchableOpacity
-                key={sort}
-                style={[
-                  styles.sortButton,
-                  sortBy === sort && styles.sortButtonActive,
-                  { borderColor: Colors[colorScheme ?? 'light'].tint }
-                ]}
-                onPress={() => setSortBy(sort)}
-              >
-                <ThemedText
-                  style={[
-                    styles.sortButtonText,
-                    sortBy === sort && styles.sortButtonTextActive
-                  ]}
-                >
-                  {sort.charAt(0).toUpperCase() + sort.slice(1)}
-                </ThemedText>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </View>
+        <ThemedText type="title" style={styles.title}>Favorites</ThemedText>
+        <ThemedText style={styles.subtitle}>
+          {favoriteRepositories.length} {favoriteRepositories.length === 1 ? 'repository' : 'repositories'}
+        </ThemedText>
       </ThemedView>
 
       <FlatList
-        data={repositories}
+        data={favoriteRepositories}
         renderItem={renderRepository}
         keyExtractor={(item) => item.id.toString()}
-        onEndReached={handleLoadMore}
-        onEndReachedThreshold={0.5}
-        ListFooterComponent={renderFooter}
         ListEmptyComponent={renderEmpty}
         refreshControl={
           <RefreshControl
@@ -169,23 +119,23 @@ export default function HomeScreen() {
   );
 }
 
-// Repository Item Component
-interface RepositoryItemProps {
+// Favorite Repository Item Component
+interface FavoriteRepositoryItemProps {
   repository: GitHubRepository;
   onPress: (repository: GitHubRepository) => void;
+  onRemove: (repositoryId: number) => void;
   colorScheme: 'light' | 'dark' | null;
 }
 
-function RepositoryItem({ repository, onPress, colorScheme }: RepositoryItemProps) {
-  const toggleFavorite = useToggleFavorite();
-  const isFavorite = useIsFavorite(repository.id);
-
-  const handleFavoritePress = useCallback(() => {
-    toggleFavorite.mutate({
-      repositoryId: repository.id,
-      isFavorite,
-    });
-  }, [toggleFavorite, repository.id, isFavorite]);
+function FavoriteRepositoryItem({ 
+  repository, 
+  onPress, 
+  onRemove, 
+  colorScheme 
+}: FavoriteRepositoryItemProps) {
+  const handleRemovePress = useCallback(() => {
+    onRemove(repository.id);
+  }, [onRemove, repository.id]);
 
   return (
     <TouchableOpacity
@@ -203,14 +153,13 @@ function RepositoryItem({ repository, onPress, colorScheme }: RepositoryItemProp
           </ThemedText>
         </View>
         <TouchableOpacity
-          style={styles.favoriteButton}
-          onPress={handleFavoritePress}
-          disabled={toggleFavorite.isPending}
+          style={styles.removeButton}
+          onPress={handleRemovePress}
         >
           <Ionicons
-            name={isFavorite ? 'heart' : 'heart-outline'}
+            name="heart"
             size={24}
-            color={isFavorite ? '#ff6b6b' : Colors[colorScheme ?? 'light'].text}
+            color="#ff6b6b"
           />
         </TouchableOpacity>
       </View>
@@ -251,52 +200,12 @@ const styles = StyleSheet.create({
     borderBottomColor: '#e0e0e0',
   },
   title: {
-    marginBottom: 16,
+    marginBottom: 4,
     textAlign: 'center',
   },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    marginBottom: 16,
-  },
-  searchIcon: {
-    marginRight: 8,
-  },
-  searchInput: {
-    flex: 1,
-    paddingVertical: 12,
-    fontSize: 16,
-  },
-  sortContainer: {
-    marginBottom: 8,
-  },
-  sortLabel: {
-    marginBottom: 8,
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  sortButtons: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  sortButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    borderWidth: 1,
-  },
-  sortButtonActive: {
-    backgroundColor: '#007AFF',
-  },
-  sortButtonText: {
-    fontSize: 14,
-    fontWeight: '500',
-  },
-  sortButtonTextActive: {
-    color: 'white',
+  subtitle: {
+    textAlign: 'center',
+    opacity: 0.7,
   },
   listContainer: {
     padding: 16,
@@ -334,7 +243,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     opacity: 0.7,
   },
-  favoriteButton: {
+  removeButton: {
     padding: 4,
   },
   repositoryDescription: {
@@ -362,13 +271,30 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#007AFF',
   },
-  footerLoader: {
-    padding: 16,
-    alignItems: 'center',
-  },
   emptyContainer: {
-    padding: 32,
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
+    padding: 32,
+  },
+  emptyTitle: {
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  emptyMessage: {
+    textAlign: 'center',
+    marginBottom: 24,
+    opacity: 0.7,
+    lineHeight: 20,
+  },
+  exploreButton: {
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 8,
+  },
+  exploreButtonText: {
+    color: 'white',
+    fontWeight: '600',
   },
   errorContainer: {
     flex: 1,
