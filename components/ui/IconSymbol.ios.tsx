@@ -24,6 +24,7 @@ export function IconSymbol({
         {
           width: size,
           height: size,
+          alignSelf: 'center',
         },
         style,
       ]}

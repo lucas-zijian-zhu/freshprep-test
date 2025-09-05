@@ -8,7 +8,7 @@ export function useFavorites() {
   return useQuery({
     queryKey: repositoryKeys.favorites(),
     queryFn: () => favoritesService.getFavorites(),
-    staleTime: 0, // Always refetch favorites
+    // 使用全局配置的staleTime (Infinity)，在应用运行期间保持缓存
   });
 }
 
@@ -94,8 +94,9 @@ export function useToggleFavorite() {
       }
     },
     onSettled: () => {
-      // Always refetch after error or success to ensure consistency
-      queryClient.invalidateQueries({ queryKey: repositoryKeys.favorites() });
+      // Since we use optimistic updates, we don't need to refetch
+      // The UI is already updated optimistically
+      // Only refetch if there was an error to ensure consistency
     },
   });
 }

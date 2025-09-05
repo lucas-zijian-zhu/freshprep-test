@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "freshprep-test",
-    "slug": "freshprep-test",
+    "name": "Repo Explorer",
+    "slug": "repo-explorer",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "freshpreptest",
+    "scheme": "repoexplorer",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -16,7 +16,10 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "navigationBar": {
+        "visible": true
+      }
     },
     "web": {
       "bundler": "metro",

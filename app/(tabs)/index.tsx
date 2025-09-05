@@ -2,13 +2,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useCallback, useState } from 'react';
 import {
-  ActivityIndicator,
-  FlatList,
-  RefreshControl,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View
+    ActivityIndicator,
+    FlatList,
+    RefreshControl,
+    StyleSheet,
+    TextInput,
+    TouchableOpacity,
+    View
 } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -100,7 +100,7 @@ export default function HomeScreen() {
   return (
     <ThemedView style={styles.container}>
       <ThemedView style={styles.header}>
-        <ThemedText type="title" style={styles.title}>GitHub Repositories</ThemedText>
+        <ThemedText type="subtitle" style={styles.title}>GitHub Repositories</ThemedText>
         
         <View style={styles.searchContainer}>
           <Ionicons 

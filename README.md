@@ -13,10 +13,10 @@ A React Native mobile application built with Expo that allows users to search, b
 - **React Query Integration**: All data fetching powered by React Query
 
 ### Level 2: Query Caching & Search ✅
-- **In-Memory Caching**: Repositories are cached during app session
+- **In-Memory Caching**: Repositories are cached during app session and never expire
 - **Search Functionality**: Real-time search with debouncing
 - **Sort Options**: Sort by stars, forks, or last updated
-- **Smart Caching**: Automatic cache invalidation and background refetching
+- **Persistent Caching**: Data remains cached throughout the entire app session
 
 ### Level 3: Favorites with Optimistic Updates ✅
 - **Favorites Tab**: Dedicated tab for favorited repositories

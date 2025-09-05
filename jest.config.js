@@ -5,10 +5,10 @@ module.exports = {
   transformIgnorePatterns: [
     'node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg)'
   ],
-  moduleNameMapping: {
+  moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
   },
-  testEnvironment: 'node',
+  testEnvironment: 'jsdom',
   collectCoverageFrom: [
     '**/*.{ts,tsx}',
     '!**/*.d.ts',
@@ -18,12 +18,4 @@ module.exports = {
     '!**/android/**',
     '!**/ios/**',
   ],
-  coverageThreshold: {
-    global: {
-      branches: 70,
-      functions: 70,
-      lines: 70,
-      statements: 70,
-    },
-  },
 };

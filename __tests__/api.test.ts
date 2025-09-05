@@ -49,7 +49,13 @@ describe('GitHub API Service', () => {
       });
 
       expect(fetch).toHaveBeenCalledWith(
-        'https://api.github.com/search/repositories?q=test&page=1&per_page=10&sort=stars&order=desc'
+        'https://api.github.com/search/repositories?q=test&page=1&per_page=10&sort=stars&order=desc',
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            'Accept': 'application/vnd.github.v3+json',
+            'User-Agent': 'GitHub-Repo-App/1.0.0',
+          }),
+        })
       );
       expect(result).toEqual(mockResponse);
     });
@@ -67,7 +73,7 @@ describe('GitHub API Service', () => {
           page: 1,
           per_page: 10,
         })
-      ).rejects.toThrow('GitHub API error: 404 Not Found');
+      ).rejects.toThrow('Repository not found.');
     });
   });
 
@@ -100,7 +106,13 @@ describe('GitHub API Service', () => {
       const result = await githubAPI.getRepository('test-user', 'test-repo');
 
       expect(fetch).toHaveBeenCalledWith(
-        'https://api.github.com/repos/test-user/test-repo'
+        'https://api.github.com/repos/test-user/test-repo',
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            'Accept': 'application/vnd.github.v3+json',
+            'User-Agent': 'GitHub-Repo-App/1.0.0',
+          }),
+        })
       );
       expect(result).toEqual(mockRepository);
     });

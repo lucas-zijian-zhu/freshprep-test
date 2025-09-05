@@ -40,8 +40,8 @@ freshprep-test/
 
 ### Query Client Setup
 The React Query client is configured in `lib/queryClient.ts` with the following settings:
-- **Stale Time**: 5 minutes - data is considered fresh for 5 minutes
-- **Garbage Collection Time**: 10 minutes - cached data is kept in memory for 10 minutes
+- **Stale Time**: Infinity - data never expires during app session
+- **Garbage Collection Time**: Infinity - cached data is kept in memory for the entire app session
 - **Retry Logic**: Smart retry strategy that doesn't retry 4xx client errors
 - **Retry Delay**: Exponential backoff with max delay of 30 seconds
 
