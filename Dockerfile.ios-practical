@@ -1,0 +1,37 @@
+# Practical iOS Development Environment
+FROM node:22.19.0-alpine
+
+# Install system dependencies
+RUN apk add --no-cache \
+    git \
+    bash \
+    curl \
+    python3 \
+    make \
+    g++ \
+    && rm -rf /var/cache/apk/*
+
+# Create app directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci
+
+# Install Expo CLI globally
+RUN npm install -g @expo/cli
+
+# Copy source code
+COPY . .
+
+# Set environment variables for Expo
+ENV EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
+ENV REACT_NATIVE_PACKAGER_HOSTNAME=0.0.0.0
+
+# Expose ports
+EXPOSE 8081 19000 19001 19002
+
+# Set default command
+CMD ["sh", "-c", "echo '🍎 Starting iOS Development Environment...' && echo '📱 This environment provides:' && echo '   - Expo development server' && echo '   - Web access at http://localhost:8081' && echo '   - QR code for mobile testing with Expo Go' && echo '   - Ready for iOS Simulator connection' && echo '' && echo '🔗 To connect iOS Simulator:' && echo '   1. Start iOS Simulator locally (requires macOS)' && echo '   2. Or use: docker run -p 6080:6080 budtmo/docker-ios:simulator_15.0' && echo '   3. Then scan QR code with Expo Go app' && echo '' && echo '🚀 Starting Expo development server...' && npx expo start --host lan"]

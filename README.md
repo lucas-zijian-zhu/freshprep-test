@@ -138,9 +138,9 @@ npm run docker:logs
 - **Environment variables** for configuration
 - **Android emulator support** with multiple options
 
-## Android Emulator in Docker
+## Mobile Development in Docker
 
-This project supports running Android emulators inside Docker containers for complete mobile development.
+This project supports running both Android and iOS development environments inside Docker containers for complete mobile development.
 
 ### Android Development Options
 
@@ -210,6 +210,62 @@ adb install app.apk
    - Hot reloading enabled
    - Debugging tools available
 
+### iOS Development Options
+
+#### Option 1: iOS Development Environment (Recommended)
+```bash
+# Start iOS development environment
+npm run docker:ios
+
+# Build iOS image
+npm run docker:ios-build
+```
+
+**Features:**
+- Lightweight Node.js environment
+- Expo development server
+- Web access at http://localhost:8081
+- Ready for external iOS Simulator connection
+
+#### Option 2: iOS Simulator
+```bash
+# Start iOS simulator
+npm run docker:ios-simulator
+```
+
+**Features:**
+- Complete iOS Simulator inside Docker
+- Web UI access at http://localhost:6080
+- Ready for Expo Go app testing
+
+### iOS Simulator Access
+
+#### Web Interface
+- **Simulator UI**: http://localhost:6080 (noVNC)
+- **Expo DevTools**: http://localhost:19000
+- **Metro Bundler**: http://localhost:8081
+
+#### iOS Development Workflow
+
+1. **Start iOS simulator**:
+   ```bash
+   npm run docker:ios
+   ```
+
+2. **Access simulator**:
+   - Web UI: http://localhost:6080
+   - Expo DevTools: http://localhost:19000
+
+3. **Connect device** (alternative):
+   - Use Expo Go app on your iOS device
+   - Scan QR code from the terminal
+   - Or use iOS Simulator locally (requires macOS)
+
+4. **Development**:
+   - Code changes auto-reload
+   - Hot reloading enabled
+   - Debugging tools available
+
 ### Available Scripts
 
 #### Development
@@ -241,6 +297,11 @@ adb install app.apk
 - `npm run docker:android` - Start Android development environment
 - `npm run docker:android-build` - Build Android Docker image
 - `npm run docker:android-emulator` - Start Android emulator
+
+#### Docker iOS
+- `npm run docker:ios` - Start iOS development environment
+- `npm run docker:ios-build` - Build iOS Docker image
+- `npm run docker:ios-simulator` - Start iOS simulator
 
 ## Project Structure
 

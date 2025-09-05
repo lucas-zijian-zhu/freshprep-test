@@ -22,7 +22,10 @@
     "docker:logs": "docker-compose logs -f app-dev",
     "docker:android": "docker-compose -f docker-compose.android-practical.yml up android-dev",
     "docker:android-build": "docker build -f Dockerfile.android-practical -t android-practical .",
-    "docker:android-emulator": "docker-compose -f docker-compose.android-practical.yml up android-emulator"
+    "docker:android-emulator": "docker-compose -f docker-compose.android-practical.yml up android-emulator",
+    "docker:ios": "docker-compose -f docker-compose.ios-practical.yml up ios-dev",
+    "docker:ios-build": "docker build -f Dockerfile.ios-practical -t ios-practical .",
+    "docker:ios-simulator": "docker-compose -f docker-compose.ios-practical.yml up ios-simulator"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
