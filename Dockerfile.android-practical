@@ -1,0 +1,41 @@
+# Practical Android Development Environment
+FROM node:18-alpine
+
+# Install system dependencies
+RUN apk add --no-cache \
+    git \
+    bash \
+    curl \
+    openjdk11-jre \
+    && rm -rf /var/cache/apk/*
+
+# Set environment variables
+ENV ANDROID_HOME=/opt/android-sdk
+ENV ANDROID_SDK_ROOT=/opt/android-sdk
+ENV PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
+ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk
+
+# Create app directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci
+
+# Install Expo CLI globally
+RUN npm install -g @expo/cli
+
+# Copy source code
+COPY . .
+
+# Set environment variables for Expo
+ENV EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0
+ENV REACT_NATIVE_PACKAGER_HOSTNAME=0.0.0.0
+
+# Expose ports
+EXPOSE 8081 19000 19001 19002
+
+# Set default command
+CMD ["sh", "-c", "echo '🤖 Starting Android Development Environment...' && echo '📱 This environment provides:' && echo '   - Expo development server' && echo '   - Web access at http://localhost:8081' && echo '   - QR code for mobile testing with Expo Go' && echo '   - Ready for external Android emulator connection' && echo '' && echo '🔗 To connect an Android emulator:' && echo '   1. Start Android Studio emulator locally' && echo '   2. Or use: docker run -p 5554:5554 -p 5555:5555 budtmo/docker-android:emulator_11.0' && echo '   3. Then run: adb connect localhost:5554' && echo '' && echo '🚀 Starting Expo development server...' && npx expo start --host lan"]

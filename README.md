@@ -136,7 +136,79 @@ npm run docker:logs
 - **Volume mounting** for live code changes
 - **Port mapping** for all necessary services
 - **Environment variables** for configuration
-- **Android emulator support** (optional)
+- **Android emulator support** with multiple options
+
+## Android Emulator in Docker
+
+This project supports running Android emulators inside Docker containers for complete mobile development.
+
+### Android Development Options
+
+#### Option 1: Android Development Environment (Recommended)
+```bash
+# Start Android development environment
+npm run docker:android
+
+# Build Android image
+npm run docker:android-build
+```
+
+**Features:**
+- Lightweight Node.js environment
+- Expo development server
+- Web access at http://localhost:8081
+- Ready for external Android emulator connection
+
+#### Option 2: Android Emulator
+```bash
+# Start Android emulator
+npm run docker:android-emulator
+```
+
+**Features:**
+- Complete Android emulator inside Docker
+- Web UI access at http://localhost:6080
+- ADB access on ports 5554-5555
+
+### Android Emulator Access
+
+#### Web Interface
+- **Emulator UI**: http://localhost:6080 (noVNC)
+- **Expo DevTools**: http://localhost:19000
+- **Metro Bundler**: http://localhost:8081
+
+#### ADB Connection
+```bash
+# Connect to emulator via ADB
+adb connect localhost:5554
+
+# List devices
+adb devices
+
+# Install APK
+adb install app.apk
+```
+
+### Android Development Workflow
+
+1. **Start Android emulator**:
+   ```bash
+   npm run docker:android
+   ```
+
+2. **Access emulator**:
+   - Web UI: http://localhost:6080
+   - Expo DevTools: http://localhost:19000
+
+3. **Connect device** (alternative):
+   - Enable USB debugging on your Android device
+   - Connect via USB or WiFi
+   - Use Expo Go app to scan QR code
+
+4. **Development**:
+   - Code changes auto-reload
+   - Hot reloading enabled
+   - Debugging tools available
 
 ### Available Scripts
 
@@ -164,6 +236,11 @@ npm run docker:logs
 - `npm run docker:run-prod` - Run production container
 - `npm run docker:clean` - Clean up Docker containers and images
 - `npm run docker:logs` - View Docker container logs
+
+#### Docker Android
+- `npm run docker:android` - Start Android development environment
+- `npm run docker:android-build` - Build Android Docker image
+- `npm run docker:android-emulator` - Start Android emulator
 
 ## Project Structure
 
