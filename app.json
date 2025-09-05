@@ -19,7 +19,8 @@
       "edgeToEdgeEnabled": true,
       "navigationBar": {
         "visible": true
-      }
+      },
+      "package": "com.anonymous.repoexplorer"
     },
     "web": {
       "bundler": "metro",

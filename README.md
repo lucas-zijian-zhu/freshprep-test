@@ -42,6 +42,7 @@ A React Native mobile application built with Expo that allows users to search, b
 - npm or yarn
 - Expo CLI (`npm install -g @expo/cli`)
 - iOS Simulator (for iOS development) or Android Studio (for Android development)
+- Docker (optional, for containerized development)
 
 ### Installation
 
@@ -66,16 +67,103 @@ A React Native mobile application built with Expo that allows users to search, b
    - Press `a` for Android emulator
    - Scan QR code with Expo Go app on your device
 
+## Docker Support
+
+This project includes full Docker support for both development and production environments.
+
+### Docker Prerequisites
+
+- Docker Desktop installed and running
+- Docker Compose (included with Docker Desktop)
+
+### Docker Development
+
+1. **Start development environment**
+   ```bash
+   # Using docker-compose (recommended)
+   npm run docker:dev
+   
+   # Or using individual Docker commands
+   npm run docker:build-dev
+   npm run docker:run-dev
+   ```
+
+2. **Access the application**
+   - Metro bundler: http://localhost:8081
+   - Expo dev tools: http://localhost:19000
+   - Expo dev server: http://localhost:19001
+   - Expo tunnel: http://localhost:19002
+
+3. **View logs**
+   ```bash
+   npm run docker:logs
+   ```
+
+### Docker Production
+
+1. **Build production image**
+   ```bash
+   npm run docker:build-prod
+   ```
+
+2. **Run production container**
+   ```bash
+   npm run docker:run-prod
+   ```
+
+3. **Using docker-compose**
+   ```bash
+   npm run docker:prod
+   ```
+
+### Docker Management
+
+```bash
+# Build all images
+npm run docker:build
+
+# Clean up containers and images
+npm run docker:clean
+
+# View container logs
+npm run docker:logs
+```
+
+### Docker Features
+
+- **Multi-stage builds** for optimized production images
+- **Development environment** with hot reloading
+- **Volume mounting** for live code changes
+- **Port mapping** for all necessary services
+- **Environment variables** for configuration
+- **Android emulator support** (optional)
+
 ### Available Scripts
 
+#### Development
 - `npm start` - Start the Expo development server
 - `npm run android` - Run on Android emulator
 - `npm run ios` - Run on iOS simulator
 - `npm run web` - Run on web browser
+
+#### Testing
 - `npm test` - Run test suite
 - `npm run test:watch` - Run tests in watch mode
 - `npm run test:coverage` - Run tests with coverage report
+
+#### Code Quality
 - `npm run lint` - Run ESLint
+
+#### Docker
+- `npm run docker:dev` - Start development environment with Docker
+- `npm run docker:prod` - Start production environment with Docker
+- `npm run docker:build` - Build all Docker images
+- `npm run docker:build-dev` - Build development Docker image
+- `npm run docker:build-prod` - Build production Docker image
+- `npm run docker:run-dev` - Run development container
+- `npm run docker:run-prod` - Run production container
+- `npm run docker:clean` - Clean up Docker containers and images
+- `npm run docker:logs` - View Docker container logs
 
 ## Project Structure
 
