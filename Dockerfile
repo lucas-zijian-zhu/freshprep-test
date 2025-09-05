@@ -1,5 +1,5 @@
 # Multi-stage Dockerfile for React Native/Expo app
-FROM node:18-alpine AS base
+FROM node:22.19.0-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
