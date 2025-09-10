@@ -1,6 +1,6 @@
-import { favoritesService } from '@/services/favorites';
-import { GitHubRepository } from '@/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { favoritesService } from '../services/favorites';
+import { GitHubRepository } from '../types';
 import { repositoryKeys } from './useRepositories';
 
 // Get all favorite repository IDs
@@ -37,7 +37,7 @@ export function useFavoriteRepositories() {
       const promises = uncachedIds.map(id => 
         queryClient.fetchQuery({
           queryKey: repositoryKeys.detail(id),
-          queryFn: () => import('@/services/api').then(({ githubAPI }) => githubAPI.getRepositoryById(id)),
+          queryFn: () => import('../services/api').then(({ githubAPI }) => githubAPI.getRepositoryById(id)),
         })
       );
       return Promise.all(promises);

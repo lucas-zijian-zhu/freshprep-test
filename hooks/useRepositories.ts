@@ -1,6 +1,6 @@
-import { githubAPI } from '@/services/api';
-import { SearchParams } from '@/types';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { githubAPI } from '../services/api';
+import { SearchParams } from '../types';
 
 // Query keys
 export const repositoryKeys = {

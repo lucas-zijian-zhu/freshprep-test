@@ -3,8 +3,8 @@ import { QueryClient } from '@tanstack/react-query';
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: Infinity, // 数据在应用运行期间永不过期
-      gcTime: Infinity, // 数据在应用运行期间永不被垃圾回收
+      staleTime: Infinity, // Data never expires
+      gcTime: Infinity, // Data never garbage collected
       retry: (failureCount, error) => {
         // Don't retry on 4xx errors (client errors)
         if (error instanceof Error && 'status' in error) {

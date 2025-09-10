@@ -1,5 +1,6 @@
 module.exports = {
-  preset: 'jest-expo',
+  preset: 'ts-jest',
+  testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['@testing-library/jest-native/extend-expect'],
   testPathIgnorePatterns: ['/node_modules/', '/android/', '/ios/'],
   transformIgnorePatterns: [
@@ -8,7 +9,6 @@ module.exports = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
   },
-  testEnvironment: 'jsdom',
   collectCoverageFrom: [
     '**/*.{ts,tsx}',
     '!**/*.d.ts',
@@ -18,4 +18,8 @@ module.exports = {
     '!**/android/**',
     '!**/ios/**',
   ],
+  setupFiles: ['<rootDir>/jest.setup.js'],
+  transform: {
+    '^.+\\.(ts|tsx)$': 'ts-jest',
+  },
 };
